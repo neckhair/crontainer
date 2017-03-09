@@ -5,12 +5,26 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/neckhair/gcron/gcron"
 )
 
 var cfgFile string
+
+func handleSigint() {
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		fmt.Println("Bybye! It was a pleasure serving you!")
+		os.Exit(1)
+	}()
+}
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -21,9 +35,13 @@ var RootCmd = &cobra.Command{
 It is mainly inteded to be run inside a Docker container and
 designed to be run as an unprivileged user.`,
 
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
+		handleSigint()
+
+		gcron.Scheduler{}.Run()
+
+		for {
+		}
 	},
 }
 
