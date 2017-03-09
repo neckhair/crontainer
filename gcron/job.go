@@ -8,8 +8,8 @@ import (
 type JobFunction func()
 
 type Job struct {
-	Schedule string
 	Command  string
+	Schedule string
 }
 
 func (j Job) Function() JobFunction {

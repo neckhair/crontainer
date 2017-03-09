@@ -36,9 +36,16 @@ It is mainly inteded to be run inside a Docker container and
 designed to be run as an unprivileged user.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("---> Begin scheduling <---")
+
 		handleSigint()
 
-		gcron.Scheduler{}.Run()
+		scheduler := gcron.Scheduler{}
+		if err := scheduler.Start(gcron.Configuration.Job); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		defer scheduler.Stop()
 
 		for {
 		}
@@ -56,6 +63,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(storeConfig)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports Persistent Flags, which, if defined here,
@@ -68,14 +76,28 @@ func init() {
 func initConfig() {
 	if cfgFile != "" { // enable ability to specify config file via flag
 		viper.SetConfigFile(cfgFile)
+	} else {
+		viper.SetConfigName(".gcron") // name of config file (without extension)
+		viper.AddConfigPath("$HOME")  // adding home directory as first search path
 	}
 
-	viper.SetConfigName(".gcron") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")  // adding home directory as first search path
-	viper.AutomaticEnv()          // read in environment variables that match
+	viper.SetDefault("logfile", "/dev/stdout")
+	viper.SetDefault("jobs", []gcron.Job{})
+
+	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+}
+
+// storeConfig stores configuration data in internal structure
+func storeConfig() {
+	gcron.Configuration.Logfile = viper.GetString("logfile")
+
+	job := &gcron.Job{}
+	job.Command = viper.GetString("command")
+	job.Schedule = viper.GetString("schedule")
+	gcron.Configuration.Job = job
 }

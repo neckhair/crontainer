@@ -1,18 +1,34 @@
 package gcron
 
-import "fmt"
-
-import "github.com/robfig/cron"
+import (
+	"errors"
+	c "github.com/robfig/cron"
+)
 
 type Scheduler struct {
+	cron *c.Cron
 }
 
-func (s Scheduler) Run() {
-	fmt.Println("---> Begin scheduling <---")
+func (s Scheduler) Start(job *Job) error {
+	if job.Schedule == "" {
+		return errors.New("No schedule defined.")
+	}
 
-	job := Job{Command: "echo hello world"}
+	if s.cron != nil {
+		s.cron.Stop()
+	}
 
-	c := cron.New()
-	c.AddFunc("* * * * * *", job.Function())
-	c.Start()
+	s.cron = c.New()
+	s.AddJob(job)
+	s.cron.Start()
+
+	return nil
+}
+
+func (s Scheduler) Stop() {
+	s.cron.Stop()
+}
+
+func (s Scheduler) AddJob(job *Job) {
+	s.cron.AddFunc(job.Schedule, job.Function())
 }
