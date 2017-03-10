@@ -63,7 +63,6 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	cobra.OnInitialize(storeConfig)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports Persistent Flags, which, if defined here,
@@ -90,14 +89,6 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
-}
 
-// storeConfig stores configuration data in internal structure
-func storeConfig() {
-	gcron.Configuration.Logfile = viper.GetString("logfile")
-
-	job := &gcron.Job{}
-	job.Command = viper.GetString("command")
-	job.Schedule = viper.GetString("schedule")
-	gcron.Configuration.Job = job
+	gcron.InitializeConfig(viper.GetViper())
 }
