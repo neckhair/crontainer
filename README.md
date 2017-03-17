@@ -10,14 +10,8 @@ The configuration file will be in [YAML](http://yaml.org/):
 
 ```yml
 logfile: /dev/stdout
-jobs:
-- name: Print something to stdout every second
-  command: echo "Hello World"
-  pattern: '* * * * * *'
-
-- name: Call a url every 5 minutes.
-  command: 'curl https://www.github.com'
-  pattern: '* */5 * * * *'
+command: echo "Hello World"
+pattern: '* * * * * *'
 ```
 
 And this is how the call will look like:

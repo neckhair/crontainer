@@ -4,6 +4,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -21,7 +22,7 @@ func handleSigint() {
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
-		fmt.Println("Bybye! It was a pleasure serving you!")
+		log.Println("Bybye! It was a pleasure serving you!")
 		os.Exit(1)
 	}()
 }
@@ -36,9 +37,19 @@ It is mainly inteded to be run inside a Docker container and
 designed to be run as an unprivileged user.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
+		if gcron.Configuration.Task.Command == "" {
+			log.Fatalln("Please provide a command to run.")
+		}
+
+		log.Println("---> Begin scheduling <---")
+
 		handleSigint()
 
-		gcron.Scheduler{}.Run()
+		scheduler := gcron.NewScheduler()
+		if err := scheduler.Start(gcron.Configuration.Task); err != nil {
+			log.Fatalln(err)
+		}
+		defer scheduler.Stop()
 
 		for {
 		}
@@ -62,20 +73,31 @@ func init() {
 	// will be global for your application.
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gcron.yaml)")
+
+	RootCmd.Flags().String("command", "", "Command to run")
+	RootCmd.Flags().String("schedule", "* * * * * *", "Cron like schedule including seconds")
+
+	viper.BindPFlag("command", RootCmd.Flags().Lookup("command"))
+	viper.BindPFlag("schedule", RootCmd.Flags().Lookup("schedule"))
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" { // enable ability to specify config file via flag
 		viper.SetConfigFile(cfgFile)
+	} else {
+		viper.SetConfigName(".gcron") // name of config file (without extension)
+		viper.AddConfigPath("$HOME")  // adding home directory as first search path
 	}
 
-	viper.SetConfigName(".gcron") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")  // adding home directory as first search path
-	viper.AutomaticEnv()          // read in environment variables that match
+	viper.SetDefault("logfile", "/dev/stdout")
+
+	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+
+	gcron.InitializeConfig(viper.GetViper())
 }
