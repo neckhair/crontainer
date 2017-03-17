@@ -1,6 +1,6 @@
 FROM alpine:3.5
 
-ENV GCRON_VERSION=0.0.1
+ENV GCRON_VERSION=0.0.2
 
 RUN    apk add --update curl \
     && curl -L -o /usr/local/bin/gcron "https://github.com/neckhair/gcron/releases/download/${GCRON_VERSION}/gcron-linux-386" \
