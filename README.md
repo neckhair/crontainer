@@ -11,7 +11,7 @@ The configuration file will be in [YAML](http://yaml.org/):
 ```yml
 logfile: /dev/stdout
 command: echo "Hello World"
-pattern: '* * * * * *'
+schedule: '* * * * * *'
 ```
 
 And this is how the call will look like:
@@ -20,6 +20,20 @@ And this is how the call will look like:
 
 Or without a config file:
 
-    gcron --command="echo hello world" --pattern="* * * * * *"
+    gcron --command="echo hello world" --schedule="* * * * * *"
 
 The program will always run in the foreground as this is how it has to behave in a container.
+
+## Docker
+
+The tool is built to run inside a Docker container. This is how you use it:
+
+    docker run neckhair/gcron --command="echo 'Hello World'" --schedule="*/5 * * * * *"
+
+Or you use your own Dockerfile and copy the config file in:
+
+```dockerfile
+FROM neckhair/gcron:latest
+COPY examples/gcron.yml ./
+CMD ["gcron", "--config", "gcron.yml"]
+```
