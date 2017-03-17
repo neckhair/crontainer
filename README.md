@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/neckhair/gcron.svg?branch=master)](https://travis-ci.org/neckhair/gcron)
+
 # GCron
 
 GCron is inteded to be a replacement for cron to be used in a Docker image. It does not need root privileges, which makes it work for example on Openshift.
