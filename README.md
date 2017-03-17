@@ -37,3 +37,7 @@ FROM neckhair/gcron:latest
 COPY examples/gcron.yml ./
 CMD ["gcron", "--config", "gcron.yml"]
 ```
+
+## License
+
+This project is licensed under the terms of the MIT license.
