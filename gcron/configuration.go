@@ -2,7 +2,7 @@ package gcron
 
 var Configuration struct {
 	Logfile string
-	Job     *Job
+	Task    *Task
 }
 
 type ConfigurationManager interface {
@@ -13,8 +13,8 @@ type ConfigurationManager interface {
 func InitializeConfig(cm ConfigurationManager) {
 	Configuration.Logfile = cm.GetString("logfile")
 
-	job := &Job{}
-	job.Command = cm.GetString("command")
-	job.Schedule = cm.GetString("schedule")
-	Configuration.Job = job
+	task := &Task{}
+	task.Command = cm.GetString("command")
+	task.Schedule = cm.GetString("schedule")
+	Configuration.Task = task
 }

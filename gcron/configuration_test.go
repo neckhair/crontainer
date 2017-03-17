@@ -38,6 +38,6 @@ func TestInitializeConfig(t *testing.T) {
 	gcron.InitializeConfig(&cm)
 
 	assert.Equal(t, gcron.Configuration.Logfile, logfile)
-	assert.Equal(t, gcron.Configuration.Job.Command, command)
-	assert.Equal(t, gcron.Configuration.Job.Schedule, schedule)
+	assert.Equal(t, gcron.Configuration.Task.Command, command)
+	assert.Equal(t, gcron.Configuration.Task.Schedule, schedule)
 }

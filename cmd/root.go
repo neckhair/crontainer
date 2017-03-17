@@ -40,8 +40,8 @@ designed to be run as an unprivileged user.`,
 
 		handleSigint()
 
-		scheduler := gcron.Scheduler{}
-		if err := scheduler.Start(gcron.Configuration.Job); err != nil {
+		scheduler := gcron.NewScheduler()
+		if err := scheduler.Start(gcron.Configuration.Task); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -81,7 +81,6 @@ func initConfig() {
 	}
 
 	viper.SetDefault("logfile", "/dev/stdout")
-	viper.SetDefault("jobs", []gcron.Job{})
 
 	viper.AutomaticEnv() // read in environment variables that match
 
