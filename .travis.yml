@@ -20,6 +20,7 @@ deploy:
   - release/gcron-linux-amd64
   - release/gcron-linux-386
   - release/gcron-linux-arm
+  overwrite: true
   on:
     repo: neckhair/gcron
     tags: true

@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 
 	"github.com/spf13/cobra"
@@ -17,14 +18,22 @@ import (
 
 var cfgFile string
 
-func handleSigint() {
-	c := make(chan os.Signal, 2)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+func waitForQuit() {
+	var endWaiter sync.WaitGroup
+	endWaiter.Add(1)
+
+	signalChannel := make(chan os.Signal, 1)
+	signal.Notify(signalChannel, os.Interrupt, syscall.SIGTERM)
+
 	go func() {
-		<-c
-		log.Println("Bybye! It was a pleasure serving you!")
-		os.Exit(1)
+		// Block until the channel receives a signal
+		<-signalChannel
+
+		endWaiter.Done()
+		log.Println("Byebye, it was a pleasure serving you.")
 	}()
+
+	endWaiter.Wait()
 }
 
 // RootCmd represents the base command when called without any subcommands
@@ -43,16 +52,13 @@ designed to be run as an unprivileged user.`,
 
 		log.Println("---> Begin scheduling <---")
 
-		handleSigint()
-
 		scheduler := gcron.NewScheduler()
 		if err := scheduler.Start(gcron.Configuration.Task); err != nil {
 			log.Fatalln(err)
 		}
 		defer scheduler.Stop()
 
-		for {
-		}
+		waitForQuit()
 	},
 }
 
