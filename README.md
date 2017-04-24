@@ -24,6 +24,19 @@ Or without a config file:
 
 The program will always run in the foreground as this is how it has to behave in a container.
 
+## Multiple tasks
+
+You can schedule multiple tasks by adding them to the config file:
+
+```yml
+---
+tasks:
+- schedule: '*/5 * * * * *'
+  command: 'echo "First task"'
+- schedule: '*/10 * * * * *'
+  command: 'echo "Second task"'
+```
+
 ## Docker
 
 The tool is built to run inside a Docker container. This is how you use it:
