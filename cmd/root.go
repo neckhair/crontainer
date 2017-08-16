@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/neckhair/gcron/gcron"
+	"github.com/neckhair/crontainer/crontainer"
 )
 
 var cfgFile string
@@ -38,22 +38,22 @@ func waitForQuit() {
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "gcron",
+	Use:   "crontainer",
 	Short: "Like cron, but for a single user",
-	Long: `gcron runs regular tasks defined in its config file.
+	Long: `crontainer runs regular tasks defined in its config file.
 
 It is mainly inteded to be run inside a Docker container and
 designed to be run as an unprivileged user.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		if gcron.Configuration.Task.Command == "" {
+		if crontainer.Configuration.Task.Command == "" {
 			log.Fatalln("Please provide a command to run.")
 		}
 
 		log.Println("---> Begin scheduling <---")
 
-		scheduler := gcron.NewScheduler()
-		if err := scheduler.Start(gcron.Configuration.Task); err != nil {
+		scheduler := crontainer.NewScheduler()
+		if err := scheduler.Start(crontainer.Configuration.Task); err != nil {
 			log.Fatalln(err)
 		}
 		defer scheduler.Stop()
@@ -78,7 +78,7 @@ func init() {
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.
 
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gcron.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.crontainer.yaml)")
 
 	RootCmd.Flags().String("command", "", "Command to run")
 	RootCmd.Flags().String("schedule", "* * * * * *", "Cron like schedule including seconds")
@@ -92,7 +92,7 @@ func initConfig() {
 	if cfgFile != "" { // enable ability to specify config file via flag
 		viper.SetConfigFile(cfgFile)
 	} else {
-		viper.SetConfigName(".gcron") // name of config file (without extension)
+		viper.SetConfigName(".crontainer") // name of config file (without extension)
 		viper.AddConfigPath("$HOME")  // adding home directory as first search path
 	}
 
@@ -105,5 +105,5 @@ func initConfig() {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
 
-	gcron.InitializeConfig(viper.GetViper())
+	crontainer.InitializeConfig(viper.GetViper())
 }

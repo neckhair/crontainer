@@ -1,4 +1,4 @@
-package gcron_test
+package crontainer_test
 
 import (
 	"testing"
@@ -6,16 +6,16 @@ import (
 	"github.com/robfig/cron"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/neckhair/gcron/gcron"
+	"github.com/neckhair/crontainer/crontainer"
 )
 
 var cronService = mockCronService{}
-var task = gcron.Task{Schedule: "* *"}
+var task = crontainer.Task{Schedule: "* *"}
 
 // START Mocking the cron service
 
 type mockCronService struct {
-	gcron.CronService
+	crontainer.CronService
 	Started  bool
 	Stopped  bool
 	AddedJob *cron.Job
@@ -37,7 +37,7 @@ func (c *mockCronService) AddJob(schedule string, cmd cron.Job) error {
 // END Mocking
 
 func TestStart(t *testing.T) {
-	scheduler := gcron.NewScheduler()
+	scheduler := crontainer.NewScheduler()
 	scheduler.CronService = &cronService
 
 	scheduler.Start(&task)
@@ -47,8 +47,8 @@ func TestStart(t *testing.T) {
 }
 
 func TestStartNoScheduleDefined(t *testing.T) {
-	job := &gcron.Task{Schedule: ""}
-	scheduler := &gcron.Scheduler{}
+	job := &crontainer.Task{Schedule: ""}
+	scheduler := &crontainer.Scheduler{}
 
 	err := scheduler.Start(job)
 

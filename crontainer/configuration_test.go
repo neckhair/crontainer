@@ -1,10 +1,10 @@
-package gcron_test
+package crontainer_test
 
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"
 
-	"github.com/neckhair/gcron/gcron"
+	"github.com/neckhair/crontainer/crontainer"
 )
 
 type mockConfigurationManager struct {
@@ -35,9 +35,9 @@ func TestInitializeConfig(t *testing.T) {
 		Command:  command,
 		Schedule: schedule}
 
-	gcron.InitializeConfig(&cm)
+	crontainer.InitializeConfig(&cm)
 
-	assert.Equal(t, gcron.Configuration.Logfile, logfile)
-	assert.Equal(t, gcron.Configuration.Task.Command, command)
-	assert.Equal(t, gcron.Configuration.Task.Schedule, schedule)
+	assert.Equal(t, crontainer.Configuration.Logfile, logfile)
+	assert.Equal(t, crontainer.Configuration.Task.Command, command)
+	assert.Equal(t, crontainer.Configuration.Task.Schedule, schedule)
 }
