@@ -1,4 +1,4 @@
-package gcron
+package crontainer
 
 var Configuration struct {
 	Logfile string

@@ -2,7 +2,7 @@
 
 package main
 
-import "github.com/neckhair/gcron/cmd"
+import "github.com/neckhair/crontainer/cmd"
 
 func main() {
 	cmd.Execute()

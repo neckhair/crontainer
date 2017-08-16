@@ -1,5 +1,5 @@
 # Sample config file
 ---
-logfile: gcron.log
+logfile: crontainer.log
 schedule: '* * * * * *'
 command: 'echo "Hello World"'

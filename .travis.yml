@@ -9,18 +9,18 @@ notifications:
 
 before_deploy:
   - mkdir -p release
-  - GOOS=linux GOARCH=amd64 go build -o release/gcron-linux-amd64 $(package)
-  - GOOS=linux GOARCH=386 go build -o release/gcron-linux-386 $(package)
-  - GOOS=linux GOARCH=arm go build -o release/gcron-linux-arm $(package)
+  - GOOS=linux GOARCH=amd64 go build -o release/crontainer-linux-amd64 $(package)
+  - GOOS=linux GOARCH=386 go build -o release/crontainer-linux-386 $(package)
+  - GOOS=linux GOARCH=arm go build -o release/crontainer-linux-arm $(package)
 deploy:
   provider: releases
   api_key:
     secure: ktj2eNXuaP3hycqYA0C4jh8RRLJLUKO9/kkYrFVJoZUPcPaXFaWlRL26v87Xd2X6nsHSsL2hjy0Az6KksrXeYwDh+EOKpemcEOswBqp94VS2/7Ny3Zg4lz28qNbk5epRAirEEc+DVifcFscaSjV27c1BsIWZinDIsJW5Xll8lcykqmfAg2laz/yUBEWTUxAOu4i3Dsix6t9bHo7suxHpy6vrDIhjUGqCB3wJodi3V9g1Bv5ienI9pHYefqVfQXZmhqkl2Kf6gMTwck0DiFSEO9lCnNtgYN/eKiJnnMhhJAyEs5hZ3pcI2RcZ1KwAP6j91DoWLH2Z6oS1ixikOyR3PZhKpM/D+TnTTC/B5T5vTrqYvGm2IbQGT9uODWbcwS0RTfHRq7Fz0sCMNgLeDX1l8XipawVBNelEvk2rA4mtM1EmFwHkoYY0LXJSqEyy61BkJ6V24zBWFiQJN2MQ/2OqJxdrylw97IkwremNaID2uIzxc3HDXbEdXfP3HL30m4AqfLIG/0ox03ELhikLqvs5up1TFZR7yiskcq+DjUQoHD0+IOUfnE3nBivi0qF2W4gk0V8G96X8EmdaTPQ7vMNE+hlyA5VCKSQPAXm8nXFvR1ZlQ9vnPTI9lyYGoBJ3O8brlvaL57P3rRfU2gSPVH5GXw+CswUSBR/SqeJtAdK4/s8=
   file:
-  - release/gcron-linux-amd64
-  - release/gcron-linux-386
-  - release/gcron-linux-arm
+  - release/crontainer-linux-amd64
+  - release/crontainer-linux-386
+  - release/crontainer-linux-arm
   overwrite: true
   on:
-    repo: neckhair/gcron
+    repo: neckhair/crontainer
     tags: true
