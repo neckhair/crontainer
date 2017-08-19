@@ -6,5 +6,6 @@ command: 'echo "Single Task"'
 tasks:
 - schedule: '*/5 * * * * *'
   command: 'echo "First in list"'
+  name: First Command
 - schedule: '*/5 * * * * *'
   command: 'echo "Second in list"'

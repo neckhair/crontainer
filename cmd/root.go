@@ -90,7 +90,7 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		viper.SetConfigName(".crontainer") // name of config file (without extension)
-		viper.AddConfigPath("$HOME")  // adding home directory as first search path
+		viper.AddConfigPath("$HOME")       // adding home directory as first search path
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
