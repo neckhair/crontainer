@@ -1,6 +1,6 @@
 FROM alpine:3.5
 
-ARG GCRON_VERSION=0.1
+ARG GCRON_VERSION=0.2.0
 
 COPY examples/no_jobs.yml /etc/crontainer.yml
 
