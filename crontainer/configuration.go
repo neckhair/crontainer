@@ -1,20 +1,12 @@
 package crontainer
 
-var Configuration struct {
-	Logfile string
-	Task    *Task
-}
+import (
+	"github.com/spf13/viper"
+)
 
 type ConfigurationManager interface {
 	GetString(key string) string
+	Get(key string) interface{}
 }
 
-// InitializeConfig stores configuration data in internal structure
-func InitializeConfig(cm ConfigurationManager) {
-	Configuration.Logfile = cm.GetString("logfile")
-
-	task := &Task{}
-	task.Command = cm.GetString("command")
-	task.Schedule = cm.GetString("schedule")
-	Configuration.Task = task
-}
+var Config ConfigurationManager = viper.GetViper()

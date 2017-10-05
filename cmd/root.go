@@ -45,18 +45,15 @@ var RootCmd = &cobra.Command{
 It is mainly inteded to be run inside a Docker container and
 designed to be run as an unprivileged user.`,
 
-	Run: func(cmd *cobra.Command, args []string) {
-		if crontainer.Configuration.Task.Command == "" {
-			log.Fatalln("Please provide a command to run.")
-		}
+	PreRun: func(cmd *cobra.Command, args []string) {
+		crontainer.InitializeFromConfig()
+	},
 
+	Run: func(cmd *cobra.Command, args []string) {
 		log.Println("---> Begin scheduling <---")
 
-		scheduler := crontainer.NewScheduler()
-		if err := scheduler.Start(crontainer.Configuration.Task); err != nil {
-			log.Fatalln(err)
-		}
-		defer scheduler.Stop()
+		crontainer.Engine.Start()
+		defer crontainer.Engine.Stop()
 
 		waitForQuit()
 	},
@@ -93,10 +90,8 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		viper.SetConfigName(".crontainer") // name of config file (without extension)
-		viper.AddConfigPath("$HOME")  // adding home directory as first search path
+		viper.AddConfigPath("$HOME")       // adding home directory as first search path
 	}
-
-	viper.SetDefault("logfile", "/dev/stdout")
 
 	viper.AutomaticEnv() // read in environment variables that match
 
@@ -104,6 +99,4 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
-
-	crontainer.InitializeConfig(viper.GetViper())
 }
