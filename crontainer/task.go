@@ -2,8 +2,8 @@ package crontainer
 
 import (
 	"log"
-	"math/rand"
 	"os/exec"
+	"github.com/satori/go.uuid"
 )
 
 type Task struct {
@@ -14,7 +14,7 @@ type Task struct {
 
 func NewTask(command string, schedule string, name string) *Task {
 	if name == "" {
-		name = randStringBytes(15)
+		name = uuid.NewV4()
 	}
 	return &Task{
 		Command:  command,
@@ -42,14 +42,4 @@ func (t *Task) Run() {
 
 func (t *Task) log(text interface{}) {
 	log.Printf("[%15s] %s", t.Name, text)
-}
-
-const letterBytes = "abcdefghijklmnopqrstuvwxyz1234567890"
-
-func randStringBytes(n int) string {
-	b := make([]byte, n)
-	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
-	}
-	return string(b)
 }
