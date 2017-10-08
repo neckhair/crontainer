@@ -14,7 +14,7 @@ type Task struct {
 
 func NewTask(command string, schedule string, name string) *Task {
 	if name == "" {
-		name = uuid.NewV4()
+		name = uuid.NewV4().String()
 	}
 	return &Task{
 		Command:  command,
@@ -41,5 +41,5 @@ func (t *Task) Run() {
 }
 
 func (t *Task) log(text interface{}) {
-	log.Printf("[%15s] %s", t.Name, text)
+	log.Printf("[%8s] %s", t.Name, text)
 }
