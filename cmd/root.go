@@ -46,14 +46,15 @@ It is mainly inteded to be run inside a Docker container and
 designed to be run as an unprivileged user.`,
 
 	PreRun: func(cmd *cobra.Command, args []string) {
-		crontainer.InitializeFromConfig()
 	},
 
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Println("---> Begin scheduling <---")
 
-		crontainer.Engine.Start()
-		defer crontainer.Engine.Stop()
+		engine := crontainer.NewCronEngine()
+		engine.Initialize(viper.GetViper())
+		engine.Start()
+		defer engine.Stop()
 
 		waitForQuit()
 	},
