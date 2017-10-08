@@ -39,9 +39,13 @@ tasks:
 
 ## Docker
 
+Building the docker image is as simple as:
+
+    docker build -t crontainer .
+
 The tool is built to run inside a Docker container. This is how you use it:
 
-    docker run neckhair/crontainer --command="echo 'Hello World'" --schedule="*/5 * * * * *"
+    docker run crontainer --command="echo 'Hello World'" --schedule="*/5 * * * * *"
 
 Or you can map the configfile in:
 
