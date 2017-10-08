@@ -4,6 +4,7 @@ import (
 	"log"
 	"math/rand"
 	"os/exec"
+	"os"
 )
 
 type Task struct {
@@ -28,14 +29,14 @@ func (t *Task) Run() {
 	t.log("Started")
 	cmd := exec.Command("/bin/sh", "-c", t.Command)
 
-	out, err := cmd.Output()
+    // TODO Provide an io.Writer as Stdout and Stderr to capture the whole output
+    cmd.Stdin  = os.Stdin
+    cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
 	if err != nil {
 		t.log(err)
 	}
-
-	// TODO Provide an io.Writer as Stdout and Stderr to capture the whole output
-	// The following line only returns the last line of the output
-	t.log(string(out))
 
 	t.log("Done")
 }
