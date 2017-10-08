@@ -4,8 +4,13 @@ logfile: crontainer.log
 schedule: '* * * * * *'
 command: 'echo "Single Task"'
 tasks:
-- schedule: '*/5 * * * * *'
-  command: 'echo "First in list"'
-  name: First Command
-- schedule: '*/5 * * * * *'
-  command: 'echo "Second in list"'
+- name: First Command
+  schedule: '*/5 * * * * *'
+  type: command
+  command:
+    command: echo "Hello World 1"
+- name: Second Command
+  schedule: '*/5 * * * * *'
+  type: command
+  command:
+    command: echo "Hello World 2"

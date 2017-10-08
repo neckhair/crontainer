@@ -1,13 +1,9 @@
 package test
 
-import (
-	"log"
-
-	"github.com/neckhair/crontainer/crontainer"
-)
+import "github.com/neckhair/crontainer/crontainer"
 
 type ConfigManagerMock struct {
-	Values      interface{}
+	Tasks       []map[string]interface{}
 	SingleValue map[string]string
 }
 
@@ -16,13 +12,17 @@ func (cm *ConfigManagerMock) GetString(key string) string {
 }
 
 func (cm *ConfigManagerMock) Get(key string) interface{} {
-	return cm.Values
+	return cm.Tasks
 }
 
 func (cm *ConfigManagerMock) UnmarshalKey(key string, rawVal interface{}) error {
-	log.Println(rawVal)
-	rawVal = []crontainer.Task{crontainer.Task{Name: "test"}}
-	log.Println(rawVal)
-	log.Println("that's it")
+	switch rawVal := rawVal.(type) {
+	case *[]crontainer.Task:
+		for _, task := range cm.Tasks {
+			*rawVal = append(*rawVal, crontainer.Task{Name: task["name"].(string), Schedule: task["schedule"].(string)})
+		}
+	default:
+		panic("invalid type")
+	}
 	return nil
 }
