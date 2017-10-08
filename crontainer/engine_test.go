@@ -6,38 +6,15 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/neckhair/crontainer/crontainer"
+	"github.com/neckhair/crontainer/test"
 )
 
-type mockEngine struct {
-	Tasks []*crontainer.Task
-}
-
-func (e *mockEngine) Start() {}
-func (e *mockEngine) Stop()  {}
-func (e *mockEngine) AddTask(task *crontainer.Task) error {
-	e.Tasks = append(e.Tasks, task)
-	return nil
-}
-
-type mockConfigManager struct {
-	Values      interface{}
-	SingleValue map[string]string
-}
-
-func (cm *mockConfigManager) GetString(key string) string {
-	return cm.SingleValue[key]
-}
-
-func (cm *mockConfigManager) Get(key string) interface{} {
-	return cm.Values
-}
-
-var configurationManager *mockConfigManager
-var testEngine *mockEngine
+var configurationManager *test.ConfigManagerMock
+var testEngine *test.EngineMock
 
 func ResetData() {
-	configurationManager = &mockConfigManager{}
-	testEngine = &mockEngine{}
+	configurationManager = &test.ConfigManagerMock{}
+	testEngine = &test.EngineMock{}
 
 	crontainer.Config = configurationManager
 	crontainer.Engine = testEngine
