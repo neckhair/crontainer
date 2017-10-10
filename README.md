@@ -32,9 +32,13 @@ You can schedule multiple tasks by adding them to the config file:
 ---
 tasks:
 - schedule: '*/5 * * * * *'
-  command: 'echo "First task"'
+  type: command
+  command:
+    command: 'echo "First task"'
 - schedule: '*/10 * * * * *'
-  command: 'echo "Second task"'
+  type: command
+  command:
+    command: 'echo "Second task"'
 ```
 
 ## Docker

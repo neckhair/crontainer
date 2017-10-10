@@ -9,7 +9,7 @@ import (
 type CronMock struct {
 	WasStarted bool
 	WasStopped bool
-	Jobs       []*crontainer.Task
+	Jobs       []cron.Job
 }
 
 var cronMock crontainer.Cron = &CronMock{}
@@ -23,6 +23,6 @@ func (m *CronMock) Stop() {
 }
 
 func (m *CronMock) AddJob(schedule string, job cron.Job) error {
-	m.Jobs = append(m.Jobs, job.(*crontainer.Task))
+	m.Jobs = append(m.Jobs, job)
 	return nil
 }
