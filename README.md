@@ -10,26 +10,6 @@ The configuration file will be in [YAML](http://yaml.org/):
 
 ```yml
 logfile: /dev/stdout
-command: echo "Hello World"
-schedule: '* * * * * *'
-```
-
-And this is how the call will look like:
-
-    crontainer -c crontainer.yml
-
-Or without a config file:
-
-    crontainer --command="echo hello world" --schedule="* * * * * *"
-
-The program will always run in the foreground as this is how it has to behave in a container.
-
-## Multiple tasks
-
-You can schedule multiple tasks by adding them to the config file:
-
-```yml
----
 tasks:
 - schedule: '*/5 * * * * *'
   type: command
@@ -41,13 +21,13 @@ tasks:
     command: 'echo "Second task"'
 ```
 
+And this is how the call will look like:
+
+    crontainer -c crontainer.yml
+
 ## Docker
 
 The tool is built to run inside a Docker container. This is how you use it:
-
-    docker run neckhair/crontainer --command="echo 'Hello World'" --schedule="*/5 * * * * *"
-
-Or you can map the configfile in:
 
     docker run -v $(pwd)/examples/crontainer.yml:/etc/crontainer.yml neckhair/crontainer
 
