@@ -24,4 +24,4 @@ deploy:
     repo: neckhair/crontainer
     tags: true
 after_deploy: |
-  curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "$TRAVIS_TAG"}' -X POST https://registry.hub.docker.com/u/neckhair/crontainer/trigger/$DOCKERHUB_TOKEN/
+  curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "'${TRAVIS_TAG}'"}' -X POST https://registry.hub.docker.com/u/neckhair/crontainer/trigger/$DOCKERHUB_TOKEN/
