@@ -1,28 +1,42 @@
 ---
 language: go
 go:
-- 1.8.x
+- 1.9.x
+
+sudo: required
+
+services:
+  - docker
+
 notifications:
   email:
     on_success: never
     on_failure: change
 
-before_deploy:
-  - mkdir -p release
-  - GOOS=linux GOARCH=amd64 go build -o release/crontainer-linux-amd64
-  - GOOS=linux GOARCH=386 go build -o release/crontainer-linux-386
-  - GOOS=linux GOARCH=arm go build -o release/crontainer-linux-arm
-deploy:
-  skip_cleanup: true
-  provider: releases
-  api_key:
-    secure: ktj2eNXuaP3hycqYA0C4jh8RRLJLUKO9/kkYrFVJoZUPcPaXFaWlRL26v87Xd2X6nsHSsL2hjy0Az6KksrXeYwDh+EOKpemcEOswBqp94VS2/7Ny3Zg4lz28qNbk5epRAirEEc+DVifcFscaSjV27c1BsIWZinDIsJW5Xll8lcykqmfAg2laz/yUBEWTUxAOu4i3Dsix6t9bHo7suxHpy6vrDIhjUGqCB3wJodi3V9g1Bv5ienI9pHYefqVfQXZmhqkl2Kf6gMTwck0DiFSEO9lCnNtgYN/eKiJnnMhhJAyEs5hZ3pcI2RcZ1KwAP6j91DoWLH2Z6oS1ixikOyR3PZhKpM/D+TnTTC/B5T5vTrqYvGm2IbQGT9uODWbcwS0RTfHRq7Fz0sCMNgLeDX1l8XipawVBNelEvk2rA4mtM1EmFwHkoYY0LXJSqEyy61BkJ6V24zBWFiQJN2MQ/2OqJxdrylw97IkwremNaID2uIzxc3HDXbEdXfP3HL30m4AqfLIG/0ox03ELhikLqvs5up1TFZR7yiskcq+DjUQoHD0+IOUfnE3nBivi0qF2W4gk0V8G96X8EmdaTPQ7vMNE+hlyA5VCKSQPAXm8nXFvR1ZlQ9vnPTI9lyYGoBJ3O8brlvaL57P3rRfU2gSPVH5GXw+CswUSBR/SqeJtAdK4/s8=
-  file_glob: true
-  file: "release/crontainer-linux*"
-  overwrite: true
-  on:
-    repo: neckhair/crontainer
-    tags: true
-after_deploy: |
-  curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "'${TRAVIS_TAG}'"}' -X POST https://registry.hub.docker.com/u/neckhair/crontainer/trigger/$DOCKERHUB_TOKEN/
-  curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/neckhair/crontainer/trigger/$DOCKERHUB_TOKEN/
+env:
+  - DEP_VERSION="0.3.2"
+
+cache:
+  directories:
+  - vendor
+
+before_install:
+  - curl -L -s https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 -o $GOPATH/bin/dep
+  - chmod +x $GOPATH/bin/dep
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  - docker --version # for verification
+
+install:
+  - dep ensure
+
+after_success:
+  - if [ -n "$TRAVIS_TAG" ]; then
+      echo "Building version ${TRAVIS_TAG}...";
+      docker build -t neckhair/crontainer:latest .;
+
+      docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+      docker tag neckhair/crontainer:latest neckhair/crontainer:${TRAVIS_TAG};
+      docker push neckhair/crontainer:latest;
+      docker push neckhair/crontainer:${TRAVIS_TAG};
+    fi

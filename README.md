@@ -31,6 +31,23 @@ The tool is built to run inside a Docker container. This is how you use it:
 
     docker run -v $(pwd)/examples/crontainer.yml:/etc/crontainer.yml neckhair/crontainer
 
+## Development
+
+Dependencies are managed with [`dep`](https://github.com/golang/dep). Just run `dep ensure` or `make vendor` to install all dependencies.
+
+There is a make file for the most common tasks:
+
+```sh
+# install dependencies
+$ make vendor
+
+# run tests and build binary
+$ make all
+
+# create docker image
+$ make docker
+```
+
 ## License
 
 This project is licensed under the terms of the MIT license.
