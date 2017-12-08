@@ -13,7 +13,7 @@ func TestCronEngine(t *testing.T) {
 		t.Run("Adds the task to the list", func(t *testing.T) {
 			config := &test.ConfigManagerMock{}
 			cron := &test.CronMock{}
-			engine := crontainer.CronEngine{cron}
+			engine := crontainer.CronEngine{Cron: cron}
 
 			config.SingleValue = map[string]string{"command": "test", "schedule": "@daily"}
 
@@ -27,7 +27,7 @@ func TestCronEngine(t *testing.T) {
 		t.Run("Adds multiple tasks to the list", func(t *testing.T) {
 			config := &test.ConfigManagerMock{}
 			cron := &test.CronMock{}
-			engine := crontainer.CronEngine{cron}
+			engine := crontainer.CronEngine{Cron: cron}
 
 			config.Tasks = []map[string]interface{}{
 				{"name": "cmd 1", "schedule": "@daily"},
@@ -49,18 +49,18 @@ func TestCronEngine(t *testing.T) {
 
 	t.Run("AddTask()", func(t *testing.T) {
 		cron := &test.CronMock{}
-		engine := &crontainer.CronEngine{cron}
+		engine := &crontainer.CronEngine{Cron: cron}
 
 		task := crontainer.Task{Schedule: "@daily"}
-		engine.AddTask(task)
+		err := engine.AddTask(task)
 
+		assert.Nil(t, err)
 		assert.Equal(t, cap(cron.Jobs), 1, "has 1 task")
-		assert.Equal(t, cron.Jobs[0], &task)
 	})
 
 	t.Run("Start()", func(t *testing.T) {
 		cron := &test.CronMock{}
-		engine := &crontainer.CronEngine{cron}
+		engine := &crontainer.CronEngine{Cron: cron}
 
 		engine.Start()
 
@@ -69,7 +69,7 @@ func TestCronEngine(t *testing.T) {
 
 	t.Run("Stop()", func(t *testing.T) {
 		cron := &test.CronMock{}
-		engine := &crontainer.CronEngine{cron}
+		engine := &crontainer.CronEngine{Cron: cron}
 
 		engine.Stop()
 

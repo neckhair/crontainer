@@ -5,10 +5,12 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -70,6 +72,7 @@ func Execute() {
 }
 
 func init() {
+	rand.Seed(time.Now().Unix())
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
