@@ -19,7 +19,7 @@ type ColorMachine interface {
 
 // RoundRobinColorMachine keeps a set of colors and cycles through them when requested with Pluck()
 type RoundRobinColorMachine struct {
-	availableColors []color.Attribute
+	AvailableColors []color.Attribute
 	colorMemory     sync.Map
 }
 
@@ -35,11 +35,11 @@ func NewRoundRobinColorMachine() *RoundRobinColorMachine {
 func (m *RoundRobinColorMachine) Pluck() int {
 	var clr color.Attribute
 
-	if len(m.availableColors) == 0 {
-		m.availableColors = colors
+	if len(m.AvailableColors) == 0 {
+		m.AvailableColors = colors
 	}
 
-	clr, m.availableColors = m.availableColors[0], m.availableColors[1:]
+	clr, m.AvailableColors = m.AvailableColors[0], m.AvailableColors[1:]
 
 	return int(clr)
 }
