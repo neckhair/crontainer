@@ -14,13 +14,15 @@ all: test $(LINUX_BINARY)
 
 vendor: $(GOFILES) Gopkg.toml Gopkg.lock
 	dep ensure
-	ls -la vendor
 
 test: vendor
 	go test -v ./...
 
 build:
 	go install ./...
+
+run:
+	go run main.go --config examples/crontainer.yml
 
 clean:
 	-rm -f ${BINARY}-*
