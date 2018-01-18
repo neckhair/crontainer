@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/neckhair/crontainer.svg?branch=master)](https://travis-ci.org/neckhair/crontainer)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ab158c206de34374962341d8e023ac07)](https://www.codacy.com/app/neckhair/crontainer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=neckhair/crontainer&amp;utm_campaign=Badge_Grade)
 
 # Crontainer
 
