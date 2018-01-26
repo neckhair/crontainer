@@ -16,8 +16,8 @@ FROM alpine:3.7 as runtime
 
 LABEL maintainer="phil@neckhair.ch"
 
-COPY examples/no_jobs.yml /etc/crontainer.yml
 COPY --from=builder /go/bin/crontainer /usr/local/bin/crontainer
+COPY config.yml /etc/crontainer.yml
 
 RUN apk add --no-cache --update curl=7.57.0-r0
 
