@@ -14,7 +14,7 @@ notifications:
     on_failure: change
 
 env:
-  - DEP_VERSION="0.3.2"
+  - DEP_VERSION="0.4.1"
 
 cache:
   directories:
@@ -33,11 +33,6 @@ install:
 
 after_success:
   - if [ -n "$TRAVIS_TAG" ]; then
-      echo "Building version ${TRAVIS_TAG}...";
-      docker build -t neckhair/crontainer:latest .;
-
       docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-      docker tag neckhair/crontainer:latest neckhair/crontainer:${TRAVIS_TAG};
-      docker push neckhair/crontainer:latest;
-      docker push neckhair/crontainer:${TRAVIS_TAG};
+      goreleaser --rm-dist
     fi
