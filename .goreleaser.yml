@@ -1,0 +1,14 @@
+project_name: crontainer
+builds:
+  - binary: crontainer
+    goos:
+      - linux
+    goarch:
+      - amd64
+dockers:
+  - image: neckhair/crontainer
+    extra_files:
+      - config.yml
+    tag_templates:
+      - "{{ .Tag }}"
+      - latest
