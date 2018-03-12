@@ -1,0 +1,10 @@
+[Unit]
+Description=Crontainer Service
+After=Docker.service
+
+[Service]
+ExecStart=/usr/bin/docker run -v /etc/crontainer:/etc/crontainer:ro neckhair/crontainer NAME
+ExecStop=/usr/bin/docker stop NAME
+
+[Install]
+WantedBy=multi-user.target
