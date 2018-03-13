@@ -19,7 +19,10 @@ test: vendor
 	go test -v ./...
 
 build:
-	go install ./...
+	go build -o bin/crontainer
+
+install:
+	go install
 
 run:
 	go run main.go --config examples/crontainer.yml
